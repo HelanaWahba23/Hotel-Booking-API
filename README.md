@@ -1,4 +1,4 @@
-# Nileora Hotel Booking API
+# Hotel Booking API
 
 A RESTful API for managing hotel rooms, reservations, payments, customers, and reviews. Built with ASP.NET Core 8 and Entity Framework Core using a Code First approach.
 
