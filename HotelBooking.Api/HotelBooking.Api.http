@@ -1,0 +1,60 @@
+@host = http://localhost:5131
+@token = paste-access-token-here
+@roomId = paste-room-id-here
+
+### Login as seeded admin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@hotel.com",
+  "password": "Admin@123"
+}
+
+### Register customer
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Test Customer",
+  "email": "customer@example.com",
+  "password": "Customer@123"
+}
+
+### Search available rooms
+GET {{host}}/api/rooms/search?checkIn=2026-10-10&checkOut=2026-10-13&guests=2&page=1&pageSize=10
+
+### Create booking (customer token)
+POST {{host}}/api/bookings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "roomId": "{{roomId}}",
+  "checkInDate": "2026-10-10",
+  "checkOutDate": "2026-10-13",
+  "guests": 2,
+  "guestName": "Test Customer",
+  "guestEmail": "customer@example.com",
+  "guestPhone": "+201000000000",
+  "specialRequests": "High floor, please",
+  "promoCode": "WELCOME10",
+  "paymentMethod": "CashAtHotel"
+}
+
+### My bookings
+GET {{host}}/api/bookings/mine?page=1&pageSize=10
+Authorization: Bearer {{token}}
+
+### Public hotel information
+GET {{host}}/api/hotel
+
+### Amenities
+GET {{host}}/api/amenities
+
+### Admin dashboard
+GET {{host}}/api/dashboard
+Authorization: Bearer {{token}}
+
+### Health check
+GET {{host}}/api/health
