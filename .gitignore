@@ -7,3 +7,4 @@ obj/
 *.db-shm
 *.db-wal
 .env
+HotelBooking.Api/appsettings.Development.json
