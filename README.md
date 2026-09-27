@@ -1,90 +1,95 @@
-# Nileora Hotel Booking REST API
+# Nileora Hotel Booking API
 
-مشروع **ASP.NET Core 8 Web API فقط** لإدارة حجز فندق أونلاين. لا يحتوي على MVC أو Razor Views أو Frontend أو Node.js.
+A RESTful API for managing hotel rooms, reservations, payments, customers, and reviews. Built with ASP.NET Core 8 and Entity Framework Core using a Code First approach.
 
-المشروع مناسب لمستوى Junior .NET ويوضح المهارات الأساسية: REST API، Controllers، DTOs، Validation، EF Core Code First، SQL Server، LINQ، العلاقات، Migrations، وتسجيل الدخول بتوكن بسيط.
+## Features
 
-## الوظائف
+- Customer registration and login
+- Room availability search by date, capacity, and price
+- Booking creation with date-conflict validation
+- Booking status, cancellation, and payment management
+- Room types, amenities, prices, and promo codes
+- Customer reviews with manager approval
+- Role-based access for customers, staff, managers, and admins
+- Pagination, request validation, and centralized error handling
+- Swagger/OpenAPI documentation
 
-- إنشاء حساب عميل وتسجيل الدخول.
-- البحث عن الغرف المتاحة حسب التاريخ وعدد النزلاء والسعر.
-- إنشاء الحجز ومنع تداخل الحجوزات على نفس الغرفة.
-- عرض حجوزات العميل وإلغاؤها قبل التأكيد.
-- إدارة حالة الحجز والدفع بواسطة موظف الاستقبال.
-- إدارة الغرف وأنواعها والأسعار والسعة بواسطة المدير.
-- إدارة المرافق وكوبونات الخصم وبيانات الفندق.
-- كتابة التقييمات بعد الإقامة والتحكم في ظهورها.
-- Dashboard API لإحصائيات الغرف والحجوزات والإيرادات.
-- Pagination ومعالجة أخطاء موحدة وRate Limiting وCORS.
+## Tech Stack
 
-## التقنيات
-
-- ASP.NET Core 8 Web API
+- C# and ASP.NET Core 8 Web API
 - Entity Framework Core 8
 - SQL Server / LocalDB
 - Code First Migrations
+- LINQ
 - Swagger / OpenAPI
-- Bearer Access Token
+- Bearer token authentication
 
-## تنظيم المشروع
+## Project Structure
 
 ```text
-Controllers/   REST API endpoints
-DTOs/          Request and response models
-Domain/        Database entities and enums
-Data/          DbContext, configuration and seeding
-Services/      Booking business logic
-Security/      Token creation and authorization policies
-Middleware/    Error handling and security headers
-Migrations/    Code First database history
+HotelBooking.Api/
+├── Controllers/   API endpoints
+├── DTOs/          Request and response models
+├── Domain/        Entities and enums
+├── Data/          DbContext and database seeding
+├── Services/      Booking business logic
+├── Security/      Authentication and authorization
+├── Middleware/    Error handling and security headers
+└── Migrations/    Code First migrations
 ```
 
-## التشغيل
+## Getting Started
 
-المتطلبات: .NET 8 SDK وSQL Server LocalDB.
+### Requirements
+
+- .NET 8 SDK
+- SQL Server LocalDB or SQL Server
+
+### Setup
+
+1. Create `HotelBooking.Api/appsettings.Development.json` from `HotelBooking.Api/appsettings.Development.example.json`.
+2. Replace the example connection string, token key, and seed account values.
+3. Restore and run the project:
 
 ```powershell
 dotnet restore
 dotnet run --project HotelBooking.Api
 ```
 
-- معلومات الـAPI بصيغة JSON: `http://localhost:5131/`
-- Swagger: `http://localhost:5131/swagger`
-- Health Check: `http://localhost:5131/api/health`
+The database is created and updated automatically from the included migrations.
 
-## تجربة تسجيل الدخول
+## API Documentation
 
-نفّذ `POST /api/auth/login` من Swagger. انسخ قيمة `accessToken`، ثم اضغط **Authorize** واكتب:
+After running the project, open:
+
+- Swagger UI: `http://localhost:5131/swagger`
+- Health check: `http://localhost:5131/api/health`
+
+Use `POST /api/auth/login` to receive an access token. In Swagger, select **Authorize** and enter:
 
 ```text
-Bearer access-token-here
+Bearer your-access-token
 ```
 
-حساب المدير التجريبي موجود في `appsettings.Development.json`. يجب تغيير بياناته ومفتاح التوكن قبل النشر.
+## Main Endpoints
 
-## أهم Endpoints
-
-| Method | Endpoint | الاستخدام |
+| Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/auth/register` | إنشاء عميل |
-| POST | `/api/auth/login` | تسجيل الدخول واستلام Access Token |
-| GET | `/api/hotel` | معلومات الفندق |
-| GET | `/api/rooms/search` | البحث عن غرفة متاحة |
-| POST | `/api/bookings` | إنشاء حجز |
-| GET | `/api/bookings/mine` | حجوزات المستخدم الحالي |
-| PATCH | `/api/bookings/{id}/cancel` | إلغاء حجز |
-| GET | `/api/bookings` | عرض الحجوزات للتشغيل |
-| PATCH | `/api/bookings/{id}/status` | تحديث حالة الحجز |
-| PATCH | `/api/bookings/{id}/payment` | تحديث الدفع |
-| POST | `/api/rooms` | إضافة غرفة |
-| PATCH | `/api/room-types/{id}/price` | تعديل السعر |
-| GET | `/api/dashboard` | إحصائيات الإدارة |
-| GET | `/api/users` | المستخدمون المسجلون |
-| POST | `/api/reviews` | كتابة تقييم |
-| GET | `/api/health` | حالة الخدمة |
+| `POST` | `/api/auth/register` | Register a customer |
+| `POST` | `/api/auth/login` | Login and receive an access token |
+| `GET` | `/api/rooms/search` | Search available rooms |
+| `POST` | `/api/bookings` | Create a booking |
+| `GET` | `/api/bookings/mine` | Get the current user's bookings |
+| `PATCH` | `/api/bookings/{id}/cancel` | Cancel a booking |
+| `PATCH` | `/api/bookings/{id}/status` | Update booking status |
+| `PATCH` | `/api/bookings/{id}/payment` | Update payment status |
+| `POST` | `/api/rooms` | Add a room |
+| `PATCH` | `/api/room-types/{id}/price` | Update a room price |
+| `POST` | `/api/reviews` | Add a customer review |
+| `GET` | `/api/dashboard` | Get management statistics |
 
-طلبات جاهزة للتجربة موجودة في `HotelBooking.Api/HotelBooking.Api.http`.
+Additional request examples are available in `HotelBooking.Api/HotelBooking.Api.http`.
 
-## وصف مناسب للـCV
+## Database
 
-> Online Hotel Booking REST API built with ASP.NET Core 8, Entity Framework Core Code First, SQL Server, DTO Validation, LINQ, Swagger and role-based authorization.
+The database includes users, room types, rooms, bookings, payments, reviews, amenities, promo codes, and hotel settings. Relationships, indexes, constraints, and column configuration are defined in `HotelDbContext`.
